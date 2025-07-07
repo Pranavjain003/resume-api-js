@@ -106,23 +106,23 @@ ${resumeText}
 }
 
 // Main runner
-(async () => {
-  try {
-    const resumeText = await extractTextFromPDF(pdfPath);
-    const scoredData = await scoreResumeWithLLM(resumeText);
+// (async () => {
+//   try {
+//     const resumeText = await extractTextFromPDF(pdfPath);
+//     const scoredData = await scoreResumeWithLLM(resumeText);
 
-    if (scoredData) {
-      console.log("\n✅ Final Scored Resume JSON:\n", JSON.stringify(scoredData, null, 2));
+//     if (scoredData) {
+//       console.log("\n✅ Final Scored Resume JSON:\n", JSON.stringify(scoredData, null, 2));
 
-      // Optional: save to database or file
-      fs.appendFileSync("scored_resumes.json", JSON.stringify(scoredData, null, 2) + ",\n");
-    } else {
-      console.log("❌ Failed to process resume.");
-    }
-  } catch (err) {
-    console.error("🔥 Fatal error:", err.message);
-  }
-})();
+//       // Optional: save to database or file
+//       fs.appendFileSync("scored_resumes.json", JSON.stringify(scoredData, null, 2) + ",\n");
+//     } else {
+//       console.log("❌ Failed to process resume.");
+//     }
+//   } catch (err) {
+//     console.error("🔥 Fatal error:", err.message);
+//   }
+// })();
 export async function scoreResumeFromPath(filePath) {
   const resumeText = await extractTextFromPDF(filePath);
   const scoredData = await scoreResumeWithLLM(resumeText);
