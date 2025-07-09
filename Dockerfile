@@ -1,6 +1,5 @@
 # Use official Node.js image with ES Module support
-FROM node:18
-
+FROM node:18.20.8
 # Create app directory
 WORKDIR /app
 
