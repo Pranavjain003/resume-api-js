@@ -1,0 +1,95 @@
+{
+  "name": "Pranav Jain",
+  "education": "B.E - Thapar Institute of Engineering and Technology - Computer Science (Expected 2026, CGPA 9.42)",
+  "experience_summary": "Research Intern at Samsung R&D Institute India (Oct 2024 – Mar 2025): Led project automation, frontend development, and partial backend integration.  Automated image evaluation, applied image processing, and reduced human bias.",
+  "skills": [
+    "Appium",
+    "Django",
+    "Image Processing",
+    "Python",
+    "Pandas",
+    "NumPy",
+    "Flask",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Node.js",
+    "MongoDB",
+    "ReactJS",
+    "YOLOv5",
+    "LabelImg",
+    "OCR",
+    "OpenCV",
+    "C",
+    "C++",
+    "R",
+    "SQL",
+    "LaTeX",
+    "Arduino Programming",
+    "Opengl",
+    "Data Structures & Algorithms",
+    "Operating Systems",
+    "Computer Networks",
+    "Database Management System (DBMS)",
+    "Artificial Intelligence",
+    "OOPS",
+    "Data Science",
+    "CAO",
+    "Machine Learning",
+    "Web Development"
+  ],
+  "projects_summary": [
+    {
+      "name": "Image Quality Evaluation System",
+      "description": "Automated image evaluation pipeline comparing Galaxy Enhance-X with other apps. Used a hybrid objective-subjective model to reduce human bias.",
+      "tech_stack": [
+        "Appium",
+        "Django",
+        "Image Processing"
+      ]
+    },
+    {
+      "name": "Topsis Package",
+      "description": "Python package for multi-criteria decision-making using the TOPSIS method with a Flask web interface.",
+      "tech_stack": [
+        "Python",
+        "Pandas",
+        "NumPy",
+        "Flask"
+      ]
+    },
+    {
+      "name": "AID Bridge NGO Website",
+      "description": "Full-stack web platform for NGO donations with real-time donation tracking.",
+      "tech_stack": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Node.js",
+        "MongoDB",
+        "ReactJS"
+      ]
+    },
+    {
+      "name": "Calorie Detection System",
+      "description": "Automated calorie detection system using YOLOv5 and EasyOCR, achieving 60% accuracy.",
+      "tech_stack": [
+        "YOLOv5",
+        "LabelImg",
+        "OCR",
+        "Flask",
+        "OpenCV"
+      ]
+    }
+  ],
+  "github_or_portfolio_links": [],
+  "certifications": [],
+  "participation": [],
+  "score": 0.7,
+  "tier": "medium",
+  "tags": [
+    "project_ready",
+    "well_presented",
+    "diverse_skills"
+  ]
+},
