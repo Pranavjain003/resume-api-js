@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Ensure uploads folder exists with correct permissions
-RUN mkdir -p /app/uploads && chmod -R 755 /app/uploads
+RUN mkdir -p /app/uploads && chmod -R 0777 /app/uploads
 
 # Expose the app's port
 EXPOSE 3000
