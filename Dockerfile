@@ -17,7 +17,7 @@ RUN mkdir -p /app/uploads && chmod -R 0777 /app/uploads
 EXPOSE 3000
 
 # Set environment variable to allow ESM + dotenv
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 
 # Launch the server
 CMD ["node", "server.js"]
