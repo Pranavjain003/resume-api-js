@@ -12,73 +12,80 @@ if (!apiKey) {
 
 const MODEL = "models/gemini-1.5-flash";
 const genAIClient = new genAI.GoogleGenerativeAI(apiKey);
-const model = genAIClient.getGenerativeModel({ model: MODEL });
 
+const model = genAIClient.getGenerativeModel({
+  model: MODEL,
+  systemInstruction: `You must respond only with valid JSON in this exact format:
+{
+  "name": "string",
+  "age": number,
+  "skills": ["string", "string"],
+  "score": number
+}`,
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        age: { type: "number" },
+        skills: {
+          type: "array",
+          items: { type: "string" }
+        },
+        score: { type: "number" }
+      },
+      required: ["name", "age", "score"]
+    }
+  }
+});
 
 const pdfPath = './resume1.pdf';
 
-// Function to extract text from PDF
+// Extract text from PDF
 async function extractTextFromPDF(filePath) {
   const buffer = fs.readFileSync(filePath);
   const data = await pdfParse(buffer);
   return data.text;
 }
 
-// Function to send resume to Gemini and parse the result
+// Send resume to Gemini and parse result
 async function scoreResumeWithLLM(resumeText) {
   const prompt = `
 You are an intelligent resume evaluator. Given the resume text below, extract key candidate details and assign a **quality score between 0.0 and 1.0**. Be precise and strict in evaluation — do not award score if evidence is weak or missing.
 
----
-
-📄 Return the following as valid JSON:
+Only extract the following fields in valid JSON format:
 
 - name
-- education
-- experience_summary
-- skills (list)
-- projects_summary
-- github_or_portfolio_links (list)
-- certifications (list)
-- participation (societies, hackathons, etc.)
-- score (float between 0.0 and 1.0)
-- tier: "high" (score ≥ 0.75), "medium" (0.4–0.74), "low" (≤ 0.39)
-- tags (list): choose from ["focused", "project_ready", "poor_formatting", "incomplete", "well_presented", "github_present", "certified", "inactive_profile", "diverse_skills", "academic"]
+- age (estimate if missing)
+- skills (as array of strings)
+- score (float between 0.0–1.0 based on rubric below)
 
----
+Scoring Criteria (Max 20 points → normalized):
 
-📊 Scoring Criteria (Max 20 raw points → normalized to 0.0–1.0):
-
-🔍 **Profile Depth & Quality (10 pts)**
+🔍 Profile Depth & Quality (10 pts)
 - 2–3 focused domains (e.g., ML, web, systems) → +4  
 - 6+ unrelated areas → −2  
 - Skills backed by real projects → +5  
 - Skills with no project evidence → 0  
-- Clean formatting and structure → +3  
-- Poor formatting or messy resume → −3  
+- Clean formatting → +3  
+- Poor formatting → −3  
 
-💼 **Technical Strength (6 pts)**
+💼 Technical Strength (6 pts)
 - GitHub or portfolio with real projects → +5  
-- Missing or empty links → 0  
-- Certifications (Coursera, Google, etc.) → +2  
-- Participation in hackathons/societies → +2  
+- Missing/empty links → 0  
+- Certifications → +2  
+- Hackathons/societies → +2  
 
-🎓 **Academic Background (4 pts)**
+🎓 Academic Background (4 pts)
 - Tier 1 college → +4  
 - Tier 2 → +2  
 - Tier 3/unknown → 0  
 
----
+📌 Normalize total score as: round(raw_score / 20, 2)
+Strictly respond with JSON having only "name", "age", "skills", and "score".
 
-📌 Instructions:
-- Normalize total score: \`normalized_score = round(raw_score / 20, 2)\`
-- Strictly extract GitHub/portfolio URLs — do NOT guess.
-- If info is missing, leave field empty or null.
-- Respond with valid JSON only.
-
----
-
-📝 Resume Content:
+Resume:
 \`\`\`
 ${resumeText}
 \`\`\`
@@ -90,12 +97,8 @@ ${resumeText}
 
     console.log("🧠 Raw LLM Output:\n", text);
 
-    if (text.startsWith("```json")) {
-      text = text.replace(/^```json/, "").trim();
-    }
-    if (text.endsWith("```")) {
-      text = text.slice(0, -3).trim();
-    }
+    if (text.startsWith("```json")) text = text.replace(/^```json/, "").trim();
+    if (text.endsWith("```")) text = text.slice(0, -3).trim();
 
     const parsed = JSON.parse(text);
     return parsed;
@@ -113,8 +116,6 @@ ${resumeText}
 
     if (scoredData) {
       console.log("\n✅ Final Scored Resume JSON:\n", JSON.stringify(scoredData, null, 2));
-
-      // Optional: save to database or file
       fs.appendFileSync("scored_resumes.json", JSON.stringify(scoredData, null, 2) + ",\n");
     } else {
       console.log("❌ Failed to process resume.");
@@ -123,6 +124,7 @@ ${resumeText}
     console.error("🔥 Fatal error:", err.message);
   }
 })();
+
 export async function scoreResumeFromPath(filePath) {
   const resumeText = await extractTextFromPDF(filePath);
   const scoredData = await scoreResumeWithLLM(resumeText);
