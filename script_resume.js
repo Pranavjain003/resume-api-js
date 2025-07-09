@@ -54,12 +54,19 @@ async function scoreResumeWithLLM(resumeText) {
   const prompt = `
 You are an intelligent resume evaluator. Given the resume text below, extract key candidate details and assign a **quality score between 0.0 and 1.0**. Be precise and strict in evaluation — do not award score if evidence is weak or missing.
 
-Only extract the following fields in valid JSON format:
+You must try your best to extract:
+- name (mandatory)
+- age (estimate if not explicitly mentioned, else leave null)
+- skills (only if clearly supported by evidence, else leave as empty array)
+- score (based on scoring rubric below)
 
-- name
-- age (estimate if missing)
-- skills (as array of strings)
-- score (float between 0.0–1.0 based on rubric below)
+Respond ONLY in this valid JSON format:
+{
+  "name": "string",
+  "age": number or null,
+  "skills": ["string", "string", ...],
+  "score": number
+}
 
 Scoring Criteria (Max 20 points → normalized):
 
@@ -83,7 +90,6 @@ Scoring Criteria (Max 20 points → normalized):
 - Tier 3/unknown → 0  
 
 📌 Normalize total score as: round(raw_score / 20, 2)
-Strictly respond with JSON having only "name", "age", "skills", and "score".
 
 Resume:
 \`\`\`
